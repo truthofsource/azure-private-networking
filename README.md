@@ -64,13 +64,37 @@ These are dated results for this reference implementation, not live Azure/AWS de
 
 The reference accepts disjoint hub/spoke ranges and rejects overlapping networks, overlapping subnets or a subnet outside its spoke.
 
+Run from the repository root:
+
+```bash
+python -B -m unittest discover -s tests -p test_domain.py -v
+```
+
+**What to look for:** The address-plan tests accept valid ranges and reject overlap or escaped subnets.
+
 ### 2. DNS and access remain separate decisions
 
 The model returns a private address only when both the endpoint and private-zone link are present. Public resolution does not itself grant document access.
 
+Run from the repository root:
+
+```bash
+python -B -m lab demo
+```
+
+**What to look for:** The JSON report includes modeled DNS and allowed/denied traffic checks. It does not probe Azure.
+
 ### 3. The endpoint remains an explicit choice
 
 Mock Terraform plans confirm no endpoint by default and reject enabling it without the required target/DNS inputs.
+
+Run from the repository root:
+
+```bash
+terraform -chdir=infra test -filter=tests/foundation.tftest.hcl
+```
+
+**What to look for:** Both mock plans pass: an endpoint is absent by default and missing integration inputs are rejected.
 
 ### 4. Visible results
 
@@ -89,6 +113,8 @@ Expected access denials are successful negative tests. Cloud permissions, networ
 State, saved Terraform plans, private inputs and credentials are excluded through [`.gitignore`](.gitignore). The existing validation workflow is manual-only and has no cloud deployment permission.
 
 ## Run It Locally
+
+The [command reference](docs/COMMANDS.md) includes prerequisites, Windows equivalents, focused checks and evidence notes.
 
 Requires Python 3.12 or newer. The default demonstration uses the Python standard library. Run inside a virtual environment:
 
@@ -139,6 +165,7 @@ See [strengths, weaknesses and tradeoffs](docs/SCALING.md) for the detailed deci
 
 | Guide | What you will find |
 | --- | --- |
+| [Command reference](docs/COMMANDS.md) | Copy the commands, understand their purpose and check expected results |
 | [Implementation walkthrough](docs/WALKTHROUGH.md) | Follow the processing path and code |
 | [Architecture](docs/ARCHITECTURE.md) | Understand service and identity boundaries |
 | [Terraform](infra/README.md) | Read the resource map, input examples and integration steps |
