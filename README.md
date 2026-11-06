@@ -1,6 +1,6 @@
 # Secure Cloud Networking & Private Access
 
-**Keep a public user experience while controlling the private data path.**
+**Let people reach the application while limiting access to its database and documents.**
 
 [The problem](#the-business-problem) · [The solution](#the-solution) · [What was built](#what-was-built) · [Proof it works](#proof-it-works) · [Run it](#run-it-locally)
 
@@ -8,17 +8,13 @@
 
 ## The Business Problem
 
-A browser-based operations platform needed reachable sign-in and application pages while its database and employee documents required tighter network and identity boundaries. Deployment and recovery callers also needed a documented route.
-
-1. **Reachability without a boundary.** A public application still needs controlled access to employee documents and its database.
-2. **DNS and caller surprises.** A private endpoint can change name resolution before every runtime, deployment and recovery caller is ready.
-3. **Unsafe infrastructure changes.** A broad Terraform apply can introduce unrelated changes while someone is trying to fix one connection.
+Staff and applicants need reachable sign-in and application pages. The database and employee documents need tighter access controls, and deployment and recovery tools still need a working connection. Changing a private connection or name-lookup setting can accidentally cut off one of those users or tools.
 
 ## The Solution
 
-Define the shared-network and workload boundaries in Terraform, keep application and endpoint subnets separate, and make extra private endpoints opt-in. Verify the caller route, DNS and identity together before changing a service's public access.
+Separate application and private-service network areas. Check the connection path, name lookup and permissions from each type of caller before changing public access. Keep additional private connections optional until those checks are complete.
 
-**Business goal:** Reduce exposed data paths without breaking staff access, deployment, monitoring or recovery. Make DNS and caller checks explicit before closing a public endpoint.
+**Business outcome:** Improve data protection while preserving the access needed by staff, deployment tools, monitoring and recovery.
 
 ### Platform implementation
 
@@ -27,7 +23,7 @@ Define the shared-network and workload boundaries in Terraform, keep application
 - Operated a protected SQL path with separately controlled, time-limited inspection procedures and explicit restoration checks.
 - Reviewed storage/vault private-path proposals against actual deployment callers, DNS resolution and cost; did not present every proposed private endpoint as deployed.
 
-This case study draws on a workforce/operations platform I designed and implemented. Organization details and records are excluded. The public code makes selected patterns reproducible; the screenshots show a working local demonstration with fictional data. [Validation scope](docs/VALIDATION.md) separates that evidence from provider-side acceptance.
+This case study draws on a workforce/operations platform I designed and implemented. Organization details and records are excluded. The public code makes selected patterns reproducible; the screenshots show a working local demonstration with fictional data. [Validation scope](docs/VALIDATION.md) separates that evidence from testing against the actual cloud service.
 
 ## Architecture
 
@@ -48,7 +44,7 @@ flowchart LR
 | Component | Role in plain words | Implementation |
 | --- | --- | --- |
 | Hub and workload spoke | Separate shared connectivity from workload-owned address space. | [View code](infra/main.tf) |
-| Reciprocal VNet peering | Connect the two VNets without claiming transitive routing. | [View code](infra/main.tf) |
+| Reciprocal VNet peering | Connect the two VNets without claiming automatic routing through another connected network. | [View code](infra/main.tf) |
 | Delegated application subnet | Provide the integration subnet pattern used by Functions Flex. | [View code](infra/main.tf) |
 | Endpoint subnet and management NSG | Reserve private-service placement and block management ingress ports. | [View code](infra/main.tf) |
 | Optional private endpoint | Target a separately managed service and linked DNS zone; default is Off. | [View code](infra/variables.tf) |
@@ -56,7 +52,7 @@ flowchart LR
 
 ## Proof It Works
 
-**Recorded checks:** 11 unit tests passed · 6 demonstration checks passed · 2 Terraform mock tests passed.
+**Recorded checks:** 11 unit tests passed · 6 demonstration checks passed · 2 Terraform tests using simulated cloud responses passed.
 
 These are dated results for this reference implementation, not live Azure/AWS deployment claims. [Test record](docs/validation-results.json) · [Evidence and limitations](docs/VALIDATION.md)
 
@@ -131,7 +127,7 @@ On Windows, use `.venv\Scripts\Activate.ps1` instead of the `source` command, or
 
 ## Terraform Infrastructure
 
-Parameterized hub/spoke networking, reciprocal peering, a delegated application subnet, a separate endpoint subnet, management-ingress restrictions and an opt-in endpoint for an existing service.
+Parameterized hub/spoke networking, peering configured in both directions, a delegated application subnet, a separate endpoint subnet, management-ingress restrictions and an opt-in endpoint for an existing service.
 
 See the [Terraform code and validation steps](infra/README.md), [input example](infra/example.tfvars.example) and [mock plan tests](infra/tests). Cloud commissioning and any paid resources remain separate from the local demonstration.
 

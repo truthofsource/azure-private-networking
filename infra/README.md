@@ -1,6 +1,6 @@
 # Terraform infrastructure
 
-Parameterized hub/spoke networking, reciprocal peering, a delegated application subnet, a separate endpoint subnet, management-ingress restrictions and an opt-in endpoint for an existing service.
+Parameterized hub/spoke networking, peering configured in both directions, a delegated application subnet, a separate endpoint subnet, management-ingress restrictions and an opt-in endpoint for an existing service.
 
 These configurations adapt the same resource boundaries used in the author's workforce/operations platform. Names and input examples are neutral; no environment state, backend, import block, secret or production identifier is included. Each folder is a standalone reference root, not a command to adopt an existing production resource into new state.
 
@@ -29,7 +29,7 @@ The `.tfvars.example` file is not loaded automatically. It contains placeholders
 
 ## Integration boundaries
 
-Application runtime, database/storage service, existing linked private DNS zone, DNS resolver, deployment/recovery callers and their identities are separate. Peering is not transitive routing. The model in the local dashboard is not an Azure NSG probe.
+Application runtime, database/storage service, existing linked private DNS zone, DNS resolver, deployment/recovery callers and their identities are separate. Peering is not automatic routing through another connected network. The model in the local dashboard is not an Azure NSG probe.
 
 ## Security and activation
 

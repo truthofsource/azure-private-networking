@@ -1,5 +1,7 @@
 # Implementation walkthrough
 
+**Terms used here:** DNS turns a service name into the network address used to reach it.
+
 A browser-based operations platform needed reachable sign-in and application pages while its database and employee documents required tighter network and identity boundaries. Deployment and recovery callers also needed a documented route.
 
 ## 1. Inventory callers
@@ -8,7 +10,7 @@ List the application runtime, hosted runner, operator, managed connector and rec
 
 ## 2. Read the Terraform foundation
 
-Hub and spoke address ranges are fictional and must not overlap. Peering is reciprocal; it is not transitive routing. The application subnet delegation follows the Functions Flex integration pattern.
+Hub and spoke address ranges are fictional and must not overlap. Peering is reciprocal; it is not automatic routing through another connected network. The application subnet delegation follows the Functions Flex integration pattern.
 
 ## 3. Test the DNS boundary
 

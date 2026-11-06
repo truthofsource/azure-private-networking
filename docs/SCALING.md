@@ -1,8 +1,10 @@
 # Scaling, strengths and tradeoffs
 
+**Terms used here:** Role-based access control gives people or services permissions according to their roles. A private endpoint gives a supported service an address on a private network; access permissions still apply.
+
 ## When the workload grows
 
-Use one reusable module per responsibility and explicit environment inputs. Avoid overlapping address ranges before adding spokes. Separate shared services into their own spoke when ownership, blast radius or subscription boundaries justify it; the hub need not host every shared workload. Track DNS ownership, peering limits, IP consumption, endpoint costs and recovery connectivity. Add centralized egress only after routing and availability requirements are understood.
+Use one reusable module per responsibility and explicit environment inputs. Avoid overlapping address ranges before adding spokes. Separate shared services into their own spoke when ownership, range of systems a failure could affect or subscription boundaries justify it; the hub need not host every shared workload. Track DNS ownership, peering limits, IP consumption, endpoint costs and recovery connectivity. Add centralized egress only after routing and availability requirements are understood.
 
 ## Design choices
 

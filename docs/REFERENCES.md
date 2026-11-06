@@ -4,7 +4,7 @@
 
 The architecture and operating lessons come from an Azure workforce/operations platform I built and operated. This public adaptation removes organization names, product branding, tenant/subscription/resource identifiers, private hostnames, employee records and secret material. Only curated reusable patterns are published; no private repository history is copied.
 
-The demonstration and tests are standalone reference implementations. Screenshots show their actual local execution with synthetic fixtures. Cloud integration or historical acceptance is not inferred from those screenshots.
+The demonstration and tests are standalone reference implementations. Screenshots show their actual local execution with test-only fixtures. Cloud integration or historical acceptance is not inferred from those screenshots.
 
 ## Technical references
 

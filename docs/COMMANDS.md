@@ -1,5 +1,7 @@
 # Commands and expected results
 
+**Terms used here:** DNS turns a service name into the network address used to reach it.
+
 Run these commands **from this repository's root**, unless a step explicitly says otherwise. Commands in the proof sections are local reproductions of the included behavior, not live cloud operations.
 
 ## What was actually exercised
