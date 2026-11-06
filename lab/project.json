@@ -13,8 +13,8 @@
   ],
   "notes": [
     "The dashboard runs a network policy model, not live Azure connectivity probes.",
-    "The sanitized Terraform module contains a hub/spoke foundation and opt-in private endpoint. It is not applied by CI.",
+    "The Terraform module contains a hub/spoke foundation and opt-in private endpoint. It is not applied by CI.",
     "Additional storage/vault endpoints in the source platform remained plans where DNS readiness and cost were unresolved."
   ],
-  "boundary": "Sanitized patterns from an operational platform; this screen shows local code with fictional records."
+  "boundary": "Engineering patterns from an operational platform; this screen shows local code with fictional records."
 }

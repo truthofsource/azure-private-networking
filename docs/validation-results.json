@@ -24,11 +24,11 @@
     "findings": 0
   },
   "source_hashes": {
-    "lab/__init__.py": "663de2ddd191126ed240630619821e327ee5645cb71ced52d43f3fb7780691e8",
-    "lab/__main__.py": "363b0004d94efbaa7a71de3eed75b8b687db0c361eb5b49e17202c4d432bcc59",
-    "lab/demo.py": "7c75d77c34711177b9e742cdaf5a08e6891bec79d363c14917f760c5b39c7f3c",
+    "lab/__init__.py": "95a8296d613b692bb13af925e90204c901108a2c30dfd3ffd4d0fadca55cb5f9",
+    "lab/__main__.py": "d528e758b251fa9f3bf42a326d8644a7055bcd1884112579e88981f33dcbba13",
+    "lab/demo.py": "1ee90686323e9ae6b91bddf1dd303e8c90c5121078f1e27634479fd3381d82bb",
     "lab/domain.py": "072a7275030bb97a18b8501189543b46b4b345eaed35747ffe3a22ba11da0319",
-    "lab/project.json": "4ac11115e739f7d8604f346056771cb03ba4ad1e16e6df696b80adb6434b955d",
+    "lab/project.json": "aacc3bf07c2ec984b68e1bbed537e16b40d2869d4fbe429f36ffa68ab4f836de",
     "lab/web/app.js": "3bdf7e85bd6c5229591cacaac6b5360edf402a3498af9491297a6451000693c3",
     "lab/web/index.html": "35cc32683f882bd63f96504ac54907ba88c9eecaf3cecb92ef789bcb01f4529a",
     "lab/web/style.css": "d69c9930ee870f702086a38793f7e4ba9fe42cad77e60eb15dc879a8f6921c3e",
