@@ -1,0 +1,11 @@
+location = "eastus2"
+resource_group_name = "rg-example-network"
+virtual_network_name = "vnet-example-workload"
+address_space = ["10.40.0.0/16"]
+functions_subnet_name = "application"
+functions_subnet_prefixes = ["10.40.1.0/24"]
+private_endpoints_subnet_name = "endpoints"
+private_endpoints_subnet_prefixes = ["10.40.2.0/24"]
+tags = { project = "network-reference", environment = "lab", owner = "engineering", cost_center = "training" }
+# Keep false until target, caller routes and DNS are verified.
+enable_private_endpoint = false

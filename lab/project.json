@@ -1,0 +1,20 @@
+{
+  "title": "Secure Cloud Networking & Private Access",
+  "domain": "NETWORKING / AZURE / TERRAFORM",
+  "subtitle": "Keep a public user experience while controlling the private data path.",
+  "scenario": "A browser-based operations platform needed reachable sign-in and application pages while its database and employee documents required tighter network and identity boundaries. Deployment and recovery callers also needed a documented route.",
+  "outcome": "Reduce exposed data paths without breaking staff access, deployment, monitoring or recovery. Make DNS and caller checks explicit before closing a public endpoint.",
+  "flow": [
+    "Identify each application and deployment caller",
+    "Separate shared hub and workload spoke",
+    "Integrate the application subnet",
+    "Resolve private service names correctly",
+    "Verify access before changing public ingress"
+  ],
+  "notes": [
+    "The dashboard runs a network policy model, not live Azure connectivity probes.",
+    "The sanitized Terraform module contains a hub/spoke foundation and opt-in private endpoint. It is not applied by CI.",
+    "Additional storage/vault endpoints in the source platform remained plans where DNS readiness and cost were unresolved."
+  ],
+  "boundary": "Sanitized patterns from an operational platform; this screen shows local code with fictional records."
+}
