@@ -4,7 +4,7 @@
 
 ## When the workload grows
 
-Use one reusable module per responsibility and explicit environment inputs. Avoid overlapping address ranges before adding spokes. Separate shared services into their own spoke when ownership, range of systems a failure could affect or subscription boundaries justify it; the hub need not host every shared workload. Track DNS ownership, peering limits, IP consumption, endpoint costs and recovery connectivity. Add centralized egress only after routing and availability requirements are understood.
+Give each reusable module a clear job and pass in the settings for each environment. Check address ranges before adding networks. Shared applications can have their own network when that makes ownership or failure isolation clearer; they do not all need to run in the hub. Track name lookup, address use, connection limits, cost and recovery access. Add a shared outbound-traffic service only after its routes and reliability needs are understood.
 
 ## Design choices
 

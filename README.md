@@ -165,7 +165,7 @@ See [strengths, weaknesses and tradeoffs](docs/SCALING.md) for the detailed deci
 | [Implementation walkthrough](docs/WALKTHROUGH.md) | Follow the processing path and code |
 | [Architecture](docs/ARCHITECTURE.md) | Understand service and identity boundaries |
 | [Terraform](infra/README.md) | Read the resource map, input examples and integration steps |
-| [Validation evidence](docs/VALIDATION.md) | Inspect dated checks and their limits |
+| [Validation evidence](docs/VALIDATION.md) | See the test dates, results and limits |
 | [Operations and troubleshooting](docs/OPERATIONS.md) | Diagnose failures and recover safely |
 | [Security and privacy](SECURITY.md) | Review access, secrets and publication controls |
 | [Scaling and tradeoffs](docs/SCALING.md) | Understand the costs of each design choice |
