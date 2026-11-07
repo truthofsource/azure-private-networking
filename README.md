@@ -2,7 +2,7 @@
 
 **Let people reach the application while limiting access to its database and documents.**
 
-[The problem](#the-business-problem) · [The solution](#the-solution) · [What was built](#what-was-built) · [Proof it works](#proof-it-works) · [Run it](#run-it-locally)
+[The problem](#the-business-problem) · [The solution](#the-solution) · [What was built](#what-was-built) · [Proof it works](#proof-it-works) · [Run it](#run-it-locally) · [Step by step](#step-by-step)
 
 ![Overview of the working demonstration](docs/images/01-overview.png)
 
@@ -24,6 +24,18 @@ Separate application and private-service network areas. Check the connection pat
 - Reviewed storage/vault private-path proposals against actual deployment callers, DNS resolution and cost; did not present every proposed private endpoint as deployed.
 
 This case study draws on a workforce/operations platform I designed and implemented. Organization details and records are excluded. The public code makes selected patterns reproducible; the screenshots show a working local demonstration with fictional data. [Validation scope](docs/VALIDATION.md) separates that evidence from testing against the actual cloud service.
+
+## Step by Step
+
+A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
+
+1. **Identify callers and protected services** — List who must reach the website, database and file store. Separate user access from deployment, monitoring and recovery access.
+
+2. **Define the approved network paths** — Use separate network areas and explicit connections for the intended services. Additional private connections remain optional in the public example.
+
+3. **Check names and permissions** — Confirm that each caller finds the intended service address and can reach it. Then check identity permissions, because network connectivity alone does not grant data access.
+
+4. **Review before changing access** — Test required callers before restricting or expanding a live connection. Keep the cost, recovery path and any unimplemented network options visible.
 
 ## Architecture
 
