@@ -169,6 +169,10 @@ See [strengths, weaknesses and tradeoffs](docs/SCALING.md) for the detailed deci
 - DNS and caller-path troubleshooting
 - Reusable Terraform and mock plan validation
 
+## Troubleshooting Lessons
+
+Removing a nonproduction private path required more than checking its environment label. Production used a shared storage account through a separate endpoint that had to remain intact. [Read the incident, evidence and verification](docs/LESSONS-LEARNED.md).
+
 ## Project Guides
 
 | Guide | What you will find |
