@@ -25,15 +25,28 @@ Separate application and private-service network areas. Check the connection pat
 
 This case study draws on a workforce/operations platform I designed and implemented. Organization details and records are excluded. The public code makes selected patterns reproducible; the screenshots show a working local demonstration with fictional data. [Validation scope](docs/VALIDATION.md) separates that evidence from testing against the actual cloud service.
 
+## Tools Used and What They Do
+
+| Tool or service | What it does | Where it fits |
+| --- | --- | --- |
+| Terraform | Describe private service access and the selected resource relationships. | Actual source patterns plus default-Off public examples. |
+| Azure Virtual Network, peering and NSGs | Connect and filter the intended network paths. | Azure network components, not application authorization. |
+| Private endpoints and Azure Private DNS | Provide selected private service addresses and name resolution. | Architecture/reference components; existence and current activation require separate evidence. |
+| Azure CLI, PowerShell and DNS lookup utilities | Inspect resource state and check resolution from the intended caller. | Operating tools; a laptop result does not prove a hosted caller’s path. |
+| Microsoft Entra ID and service data roles | Authorize access after the network path is available. | Separate identity layer; a reachable private IP grants no data permission. |
+| Python and Terraform mock tests | Run the public decision model and infrastructure checks. | Local validation, not a packet test or cloud deployment. |
+
+The recorded nonproduction endpoint cost pause means private paths must be restored before the affected tests resume. These examples do not recreate them, and the manual-only workflow does not activate paid networking.
+
 ## Step by Step
 
 A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
 
 1. **Identify callers and protected services** — List who must reach the website, database and file store. Separate user access from deployment, monitoring and recovery access.
 
-2. **Define the approved network paths** — Use separate network areas and explicit connections for the intended services. Additional private connections remain optional in the public example.
+2. **Define the approved network paths (Terraform)** — Use separate network areas and explicit connections for the intended services. Additional private connections remain optional in the public example.
 
-3. **Check names and permissions** — Confirm that each caller finds the intended service address and can reach it. Then check identity permissions, because network connectivity alone does not grant data access.
+3. **Check names and permissions (Private DNS and service roles)** — Confirm that each caller finds the intended service address and can reach it. Then check identity permissions, because network connectivity alone does not grant data access.
 
 4. **Review before changing access** — Test required callers before restricting or expanding a live connection. Keep the cost, recovery path and any unimplemented network options visible.
 
