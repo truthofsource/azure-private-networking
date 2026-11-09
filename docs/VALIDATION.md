@@ -47,3 +47,11 @@ This was an editorial update. Application code, tests, Terraform, images, workfl
 Added a prominent README table naming the relevant tools/services and their jobs. The wording distinguishes actual platform components, operating utilities, selected source adapters, optional preparation and local teaching examples. Relevant step headings name their tools while the four-step order and explanatory sentences remain unchanged.
 
 This editorial pass did not change application code, dependencies, infrastructure, workflows or cloud settings. Existing tests and screenshots retain their original evidence scope; no application suite, live scanner, browser sign-in, paid request or GitHub Actions run was executed for this wording update.
+
+## DNS walkthrough documentation — November 9, 2026
+
+Added or linked the private DNS configuration walkthrough, checked against the maintained Terraform pattern and Microsoft’s DNS documentation. A read-only platform inventory verified public delegation/CNAMEs, zone inventory, VNet DNS settings, links and A-record counts; public examples omit organization/resource identifiers and private IPs.
+
+This addition changes documentation only. It does not apply Terraform, edit DNS, create endpoints/resolvers, start nonproduction, test an integrated private caller or dispatch GitHub Actions; existing functional test counts and screenshots retain their original scope.
+
+Documentation checks passed for both repositories: local links, balanced code fences, whitespace, unchanged original four-step walkthroughs and manual-only workflow triggers. The private-networking guide?s two HCL excerpts passed terraform fmt -check, and its three Bash blocks passed bash -n; the inspection examples were not executed against their fictional targets.

@@ -22,3 +22,7 @@ Default demos use managed temporary directories and close their own database han
 ## Evidence to keep
 
 Retain source commit, test command/exit status, tool versions and safe error stage. For a real release, also retain exact package/image digest and the restored operating state. Do not retain credentials, bearer tokens or employee data in public artifacts.
+
+## DNS walkthrough
+
+[Configure and verify Azure Private DNS](DNS-WALKTHROUGH.md) follows the actual zone/link/endpoint pattern, with read-only checks and a dated configuration inventory. A private DNS record, a working network connection and authorized data access require separate evidence.

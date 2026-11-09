@@ -186,12 +186,17 @@ See [strengths, weaknesses and tradeoffs](docs/SCALING.md) for the detailed deci
 
 Removing a nonproduction private path required more than checking its environment label. Production used a shared storage account through a separate endpoint that had to remain intact. [Read the incident, evidence and verification](docs/LESSONS-LEARNED.md).
 
+## DNS Configuration Walkthrough
+
+Configure the private zone, link the caller’s VNet, associate the endpoint and verify its A record. The [DNS walkthrough](docs/DNS-WALKTHROUGH.md) includes Terraform excerpts, read-only CLI/DNS commands, portal steps and troubleshooting; it also contrasts external public CNAME records with Azure Private DNS and records the nonproduction cost-pause boundary.
+
 ## Project Guides
 
 | Guide | What you will find |
 | --- | --- |
 | [Command reference](docs/COMMANDS.md) | Copy the commands, understand their purpose and check expected results |
 | [Implementation walkthrough](docs/WALKTHROUGH.md) | Follow the processing path and code |
+| [DNS configuration walkthrough](docs/DNS-WALKTHROUGH.md) | Zones, VNet links, endpoint records, commands, portal steps and troubleshooting |
 | [Architecture](docs/ARCHITECTURE.md) | Understand service and identity boundaries |
 | [Terraform](infra/README.md) | Read the resource map, input examples and integration steps |
 | [Validation evidence](docs/VALIDATION.md) | See the test dates, results and limits |

@@ -46,3 +46,7 @@ Review the caller matrix, identity permissions, durable state, concurrency, log 
 ## Included Terraform
 
 Parameterized hub/spoke networking, peering configured in both directions, a delegated application subnet, a separate endpoint subnet, management-ingress restrictions and an opt-in endpoint for an existing service. See [the code map, resource inventory and integration boundaries](../infra/README.md). This public root does not provision every box in the application diagram.
+
+## DNS walkthrough
+
+[Configure and verify Azure Private DNS](DNS-WALKTHROUGH.md) follows the actual zone/link/endpoint pattern, with read-only checks and a dated configuration inventory. A private DNS record, a working network connection and authorized data access require separate evidence.
