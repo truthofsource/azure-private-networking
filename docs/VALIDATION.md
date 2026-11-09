@@ -55,3 +55,9 @@ Added or linked the private DNS configuration walkthrough, checked against the m
 This addition changes documentation only. It does not apply Terraform, edit DNS, create endpoints/resolvers, start nonproduction, test an integrated private caller or dispatch GitHub Actions; existing functional test counts and screenshots retain their original scope.
 
 Documentation checks passed for both repositories: local links, balanced code fences, whitespace, unchanged original four-step walkthroughs and manual-only workflow triggers. The private-networking guide?s two HCL excerpts passed terraform fmt -check, and its three Bash blocks passed bash -n; the inspection examples were not executed against their fictional targets.
+
+## DNS walkthrough second review — November 9, 2026
+
+Clarified the public recursive/authoritative resolution sequence and the difference between optional endpoint DNS metadata and actual NIC addresses. Added a guarded read-only NIC inspection example, link-state output, caller-level resolver caveats and companion wording corrections. Azure CLI help was inspected using a separate temporary configuration directory; no account or cloud resource was changed.
+
+The original dated inventory remains the evidence source; this review did not perform a new Azure inventory, private caller test or deployment. Functional test counts and screenshots remain unchanged.

@@ -40,11 +40,15 @@ The linked zones had VM autoregistration disabled. Endpoint records are managed 
 ```mermaid
 sequenceDiagram
     participant Browser
-    participant PublicDNS as External public DNS
+    participant Recursive as Client recursive resolver
+    participant PublicDNS as External authoritative DNS
     participant Web as Azure Static Web Apps
-    Browser->>PublicDNS: Resolve applicant or staff hostname
-    PublicDNS-->>Browser: CNAME chain to the web host
-    Browser->>Web: Connect using HTTPS
+    Browser->>Recursive: Resolve applicant or staff hostname
+    Recursive->>PublicDNS: Ask for the public record on a cache miss
+    PublicDNS-->>Recursive: CNAME pointing to the Azure web hostname
+    Note over Recursive: Follows the Azure DNS chain to address records
+    Recursive-->>Browser: Return destination addresses
+    Browser->>Web: HTTPS using the original custom hostname
 ```
 
 ```mermaid
@@ -60,7 +64,7 @@ sequenceDiagram
     App->>Service: Connect with normal hostname and approved identity
 ```
 
-The diagrams describe successful resolution paths, not fresh packet captures. Keep the normal SQL/storage service hostname in the application rather than replacing it with an IP address; this preserves the intended service/TLS name. See Microsoft’s [private endpoint DNS guidance](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns).
+The diagrams describe logical successful resolution paths, not fresh packet captures or a separate network request for every drawn private-zone step. A browser normally asks its configured recursive resolver, which follows the authoritative public records and returns the address; the authoritative website DNS provider is not an application proxy. Keep the normal SQL/storage service hostname in the application rather than replacing it with an IP address; this preserves the intended service/TLS name. See Microsoft’s [private endpoint DNS guidance](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns).
 
 ## Four-step walkthrough
 
@@ -134,7 +138,7 @@ az network private-dns zone show \
 az network private-dns link vnet list \
   --subscription "$SUBSCRIPTION" --resource-group "$DNS_RG" \
   --zone-name "$ZONE" \
-  --query '[].{name:name,vnet:virtualNetwork.id,registration:registrationEnabled}' -o json
+  --query '[].{name:name,vnet:virtualNetwork.id,linkState:virtualNetworkLinkState,registration:registrationEnabled}' -o json
 
 az network private-dns record-set a list \
   --subscription "$SUBSCRIPTION" --resource-group "$DNS_RG" \
@@ -155,7 +159,31 @@ az network vnet show \
   --name "$VNET_NAME" --query '{name:name,dnsServers:dhcpOptions.dnsServers}' -o json
 ```
 
-**Look for:** the intended zone and VNet link, the expected record/address, the endpoint association and approved connection, and the caller’s actual DNS configuration. An empty custom-DNS-server list indicates the VNet has no custom server configured; it is not an observed query trace. A zone’s total record-set count can include SOA, so inspect A records explicitly rather than treating the total as an endpoint count.
+**Look for:** the intended zone and VNet link, the expected record/address, the endpoint association and approved connection, and the caller’s actual DNS configuration. An empty custom-DNS-server list indicates the VNet has no custom server configured; it is not an observed query trace. The actual process can still use a NIC/OS override, application/container DNS setting or encrypted-DNS resolver, so inspect that caller before concluding which resolver it uses. A zone’s total record-set count can include SOA, so inspect A records explicitly rather than treating the total as an endpoint count.
+
+### Compare with the endpoint’s assigned address
+
+`customDnsConfigs` can be empty when a DNS zone group manages the endpoint’s DNS. That alone is not proof that the endpoint has no address: inspect the network interface (NIC) referenced by the selected endpoint and compare its actual IP configurations with the zone’s A record. Microsoft’s [private endpoint diagnostics](https://learn.microsoft.com/en-us/troubleshoot/azure/private-link/troubleshoot-private-endpoint-connectivity-failure) describe this distinction.
+
+This Bash block reuses the reviewed inputs above. It reads the NIC only when the endpoint lookup succeeds and returns a nonempty ID; the returned ID already includes the selected subscription and resource scope.
+
+```bash
+if ENDPOINT_NIC_ID="$(az network private-endpoint show \
+  --subscription "$SUBSCRIPTION" --resource-group "$ENDPOINT_RG" \
+  --name "$ENDPOINT_NAME" --query 'networkInterfaces[0].id' -o tsv)" \
+  && [ -n "$ENDPOINT_NIC_ID" ] && [ "$ENDPOINT_NIC_ID" != 'None' ]; then
+  az network nic show --ids "$ENDPOINT_NIC_ID" \
+    --query 'ipConfigurations[].{name:name,privateIP:privateIPAddress,version:privateIPAddressVersion}' \
+    -o json
+else
+  printf '%s\n' 'No verified endpoint NIC reference was returned; inspect endpoint state before continuing.' >&2
+  false
+fi
+```
+
+**Look for:** the IP configuration that belongs to the intended service/endpoint and an exact match with its private DNS record. Multiple configurations must be assessed rather than assuming the first address is correct. A NIC read denial is a management-plane permission limit, not proof of broken DNS; retain that limit without granting broader access or changing the endpoint. See the [NIC CLI reference](https://learn.microsoft.com/en-us/cli/azure/network/nic#az-network-nic-show).
+
+The link command projects a few fields, including link state. If fallback policy matters, inspect the complete link response using the same read-only command without `--query`; a missing policy field in that response/API version must remain unknown rather than being interpreted as enabled fallback.
 
 ### Query from the intended caller
 
@@ -176,7 +204,7 @@ $serviceHost = 'example-server.database.windows.net'
 Resolve-DnsName -Name $serviceHost -Type A -DnsOnly
 ```
 
-**Look for:** the service’s expected name chain and private answer matching the reviewed endpoint, from the intended caller. A private answer alone does not establish that it is the correct private address, and a public laptop lookup cannot prove what an integrated worker sees. Record the caller, resolver, query time, answer and relevant cache/TTL evidence without publishing private addresses.
+**Look for:** the service’s expected name chain and private answer matching the reviewed endpoint, from the intended caller. A private answer alone does not establish that it is the correct private address, and a public laptop lookup cannot prove what an integrated worker sees. Record the caller, resolver, query time, answer and relevant cache/TTL evidence without publishing private addresses. These examples use the caller’s configured resolver; forcing an unrelated public resolver would test a different resolution path.
 
 ### Contrast with public website DNS
 
@@ -209,7 +237,9 @@ Portal labels can vary. Do not add a resolver, another zone, an IP rule or a pri
 | Normal service name resolves publicly | Actual caller/resolver, intended VNet link, suffix and endpoint association | Assuming a successful laptop lookup proves the worker’s answer |
 | NXDOMAIN / name not found | Exact record name, matching zone, endpoint existence, cache and any explicitly designed fallback behavior | Creating a conflicting public zone or hard-coding a changing public IP |
 | Zone exists but has no A records | Whether endpoint paths are deliberately removed; zone group and endpoint state | Treating zone existence as a working private connection |
+| VNet uses default DNS but a process gets another answer | NIC/OS, application/container or encrypted-DNS overrides and the actual resolver | Assuming VNet settings alone prove every process’s DNS behavior |
 | One spoke resolves, another does not | Each caller’s VNet links or explicit forwarding design | Assuming VNet peering shares zone resolution automatically |
+| Endpoint metadata has no custom DNS addresses | Inspect the endpoint’s referenced NIC and actual IP configurations | Treating an empty optional field as proof that no endpoint IP exists |
 | Correct private address, connection fails | Routes, endpoint approval, NSGs, service network policy and protocol/TLS | Changing DNS to hide an unrelated connection fault |
 | Connection succeeds, data is denied | Token audience, identity, RBAC and SQL/record permissions | Granting broad rights as a DNS repair |
 | Answer remains old after a change | Resolver/client cache, TTL and authoritative record | Repeatedly modifying records before understanding the cached answer |
@@ -224,7 +254,7 @@ Service-specific zones and explicit VNet links make ownership and callers visibl
 
 The tradeoff is another dependency: an endpoint without correct DNS, or a linked zone without the expected record, can interrupt a caller. A centralized zone/forwarding design can help when many spokes share services, but requires an explicit owner, caller matrix, cross-subscription permissions and recovery plan; peering alone does not implement it. Avoid conflicting duplicate ownership for callers that should share one resolution view, and retain deliberate separation between isolated environments.
 
-Azure DNS Private Resolver is an optional service for forwarding/hybrid requirements, not a prerequisite silently added here. Account for zone/query costs, any resolver cost and endpoint hourly charges separately. No new charge or DNS deployment is incurred by this guide.
+Azure DNS Private Resolver is an optional service for forwarding/hybrid requirements, not a prerequisite silently added here. Account for zone/query costs, any resolver cost and endpoint hourly charges separately. This guide creates no Azure resource; any future configuration or caller test needs its own cost and operating scope.
 
 ## Validation and source boundary
 
