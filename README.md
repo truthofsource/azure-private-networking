@@ -8,7 +8,11 @@
 
 ## The Business Problem
 
-Staff and applicants need reachable sign-in and application pages. The database and employee documents need tighter access controls, and deployment and recovery tools still need a working connection. Changing a private connection or name-lookup setting can accidentally cut off one of those users or tools.
+Staff and applicants need reliable access to the website, while employee documents and the database need tighter protection. The same backend services must also be reachable by deployment tools, file processors and recovery procedures. Each of those callers may take a different network path.
+
+Restricting a service without checking those paths can leave a website that opens but cannot save an application, retrieve a document or complete a deployment. Name-lookup changes can produce similar symptoms, making a connection problem look like an application or permission failure. Temporary troubleshooting access also needs a defined closing procedure.
+
+The business need was to limit direct access to sensitive services while preserving the connections required for daily work, releases and recovery, with enough evidence to explain which path failed.
 
 ## The Solution
 
